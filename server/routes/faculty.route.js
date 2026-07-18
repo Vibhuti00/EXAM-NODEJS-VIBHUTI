@@ -1,4 +1,3 @@
-import express from 'express';
 import facultyuserController from '../controllers/facultyuser.controller.js';
 app.use(express.json());
 app.use('/api/faculty', facultyUserRoutes);
