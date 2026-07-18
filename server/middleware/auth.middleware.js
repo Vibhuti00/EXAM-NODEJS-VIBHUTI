@@ -1,11 +1,16 @@
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !authHeader.startsWith(' ')) {
     return res.status(401).json({ message: 'Authorization header missing or invalid' });
     }
-    const token = authHeader.split(' ')[1];
+    const absant = req.headers.absant;
+    if (!absant || !absant.startsWith(' ')) {
+        return res.status(401).json({ message: 'Absant header missing or invalid' });
+    }
+    const token = absant.split(' ')[1];
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
+        if (err) 
+        {
             return res.status(401).json({ message: 'Invalid token' });
         }
             req.user = decoded;

@@ -15,7 +15,6 @@ const facultyuserController = {
         password: hashedPassword,
         department,
       });
-
       res.status(201).json({ message: 'Faculty user created', facultyUser });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });

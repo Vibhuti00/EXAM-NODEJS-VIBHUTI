@@ -1,10 +1,7 @@
-const validationMiddleware = (schema) => 
-{
-  return (req, res, next) => 
-{
+const validationMiddleware = (schema) =>{
+  return (req, res, next) =>{
     const { error } = schema.validate(req.body);
-    if (error) 
-    {
+    if (error){
       return res.status(400).json({ message: error.details[0].message });
     }
     next();
