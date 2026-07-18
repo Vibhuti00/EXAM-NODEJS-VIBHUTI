@@ -1,24 +1,14 @@
-import { verifyToken } from "../utils/token.js";
-import Faculty from "../models/Faculty";
-
-const auth = async (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ message: 'There is no token provided.' });
-        }
-        const token = authHeader.split(' ')[1];
-        const decoded = verifyToken(token);
-        const userId = decoded.id;
-        const user = await Faculty.findById(userId);
-        if (!user) {
-            return res.status(401).json({ message: 'User not found.' });
-        }
-        req.user = user;
-        return next();
-    } catch (error) {
-        return res.status(401).json({ message: 'Invalid token.' });
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Authorization header missing or invalid' });
     }
-}
-
-export default auth;
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+            req.user = decoded;
+            next();
+    });
+};
