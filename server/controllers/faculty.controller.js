@@ -1,15 +1,15 @@
-import FacultyUser from '../models/facultyuser.model.js';
+import Faculty from '../models/faculty.model.js';
 import bcrypt from 'bcryptjs';
-const facultyuserController = {
+const facultyController = {
   createFacultyUser: async (req, res) => {
     try {
       const { name, email, password, department } = req.body;
-      const existingUser = await FacultyUser.findOne({ email });
+      const existingUser = await Faculty.findOne({ email });
       if (existingUser) {
         return res.status(409).json({ message: 'Email already in use' });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-      const facultyUser = await FacultyUser.create({
+      const facultyUser = await Faculty.create({
         name,
         email,
         password: hashedPassword,
@@ -23,7 +23,7 @@ const facultyuserController = {
   getFacultyUserDetails: async (req, res) => {
     try {
       const userId = req.params.id;
-      const facultyUser = await FacultyUser.findById(userId).select('-password');
+      const facultyUser = await Faculty.findById(userId).select('-password');
       if (!facultyUser) {
         return res.status(404).json({ message: 'Faculty user not found' });
       }
@@ -39,7 +39,7 @@ const facultyuserController = {
       if (updates.password) {
         updates.password = await bcrypt.hash(updates.password, 10);
       }
-      const facultyUser = await FacultyUser.findByIdAndUpdate(userId, updates, {
+      const facultyUser = await Faculty.findByIdAndUpdate(userId, updates, {
         new: true,
         runValidators: true,
       }).select('-password');
@@ -54,7 +54,7 @@ const facultyuserController = {
   deleteFacultyUser: async (req, res) => {
     try {
       const userId = req.params.id;
-      const facultyUser = await FacultyUser.findByIdAndDelete(userId);
+      const facultyUser = await Faculty.findByIdAndDelete(userId);
       if (!facultyUser) {
         return res.status(404).json({ message: 'Faculty user not found' });
       }
@@ -64,4 +64,4 @@ const facultyuserController = {
     }
   },
 };
-export default facultyuserController;
+export default facultyController;
